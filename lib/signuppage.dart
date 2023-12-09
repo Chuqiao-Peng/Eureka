@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/nextpage.dart';
+import 'package:flutter_application/homepage.dart';
 import 'package:flutter_application/loginpage.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -15,7 +15,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void navigateToNextPage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const NextPage()));
+        .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   void navigateToLoginPage() {
@@ -226,10 +226,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.bold,
                               color: Colors.purple),
-                        )
-                    ),
-                  ]
-                ),
+                        )),
+                  ]),
               SizedBox(height: 150),
               Text("We need permission for the service you use. Learn more."),
             ],

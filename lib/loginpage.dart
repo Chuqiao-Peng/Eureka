@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/signuppage.dart';
+import 'package:flutter_application/homepage.dart';
 
 class LoginInPage extends StatefulWidget {
   const LoginInPage({super.key});
@@ -15,6 +16,11 @@ class _LoginInPageState extends State<LoginInPage> {
   void navigateToSignUpPage() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const SignUpPage()));
+  }
+
+  void navigateToNextPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   Widget CustomTextField(String hintValue) {
@@ -94,7 +100,7 @@ class _LoginInPageState extends State<LoginInPage> {
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
-        onPressed: navigateToSignUpPage,
+        onPressed: navigateToNextPage,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               Colors.black), // Background color of the button
@@ -158,16 +164,15 @@ class _LoginInPageState extends State<LoginInPage> {
                   Row(
                     children: <Widget>[
                       SizedBox(
-                        width: 30,
-                        child: Checkbox(
-                          value: rememberValue, 
-                          onChanged: (bool? remValue) {
-                            setState(() {
-                              rememberValue = remValue!;
-                            });
-                          },
-                        )
-                      ),
+                          width: 30,
+                          child: Checkbox(
+                            value: rememberValue,
+                            onChanged: (bool? remValue) {
+                              setState(() {
+                                rememberValue = remValue!;
+                              });
+                            },
+                          )),
                       Text(
                         "Remember me",
                         style: TextStyle(
