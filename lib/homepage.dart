@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application/reportpage.dart';
+import 'package:flutter_application/reportlistpage.dart';
 import 'package:flutter_application/newspage.dart';
 
 final List<String> imgList = [
@@ -22,12 +22,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   void navigateToReportPage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const ReportPage()));
+        .push(MaterialPageRoute(builder: (context) => const ReportListPage()));
   }
 
   void navigateToNewsPage(int newsIndex) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => NewsPage(index: newsIndex)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            NewsPage(index: newsIndex, imageLink: imgList[newsIndex])));
   }
 
   List<Widget> CreateImageSlides(List<String> imgList) {
