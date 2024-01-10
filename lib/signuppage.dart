@@ -13,7 +13,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool obscureValue1 = true;
   bool obscureValue2 = true;
 
-  void navigateToNextPage() {
+  void navigateToHomePage() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
@@ -142,7 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
-        onPressed: navigateToNextPage,
+        onPressed: navigateToHomePage,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               Colors.black), // Background color of the button
@@ -159,6 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        centerTitle: false,
         leading: Padding(
           padding: const EdgeInsets.only(left: 40.0),
           child: Icon(

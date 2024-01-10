@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_application/reportpage.dart';
+import 'package:flutter_application/newspage.dart';
 
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -18,48 +20,74 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Widget> imageSliders = imgList
-      .map((item) => Container(
-            height: 370,
-            child: Container(
-              margin: EdgeInsets.all(5.0),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  child: Stack(
-                    children: <Widget>[
-                      Image.network(item, fit: BoxFit.cover, width: 1000.0),
-                      Positioned(
-                        bottom: 0.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromARGB(200, 0, 0, 0),
-                                Color.fromARGB(0, 0, 0, 0)
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 20.0),
-                          // child: Text(
-                          //   'No. ${imgList.indexOf(item)} image',
-                          //   style: TextStyle(
-                          //     color: Colors.white,
-                          //     fontSize: 20.0,
-                          //     fontWeight: FontWeight.bold,
-                          //   ),
-                          // ),
-                        ),
-                      ),
-                    ],
-                  )),
+  void navigateToReportPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const ReportPage()));
+  }
+
+  void navigateToNewsPage(int newsIndex) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => NewsPage(index: newsIndex)));
+  }
+
+  List<Widget> CreateImageSlides(List<String> imgList) {
+    List<Widget> imageSlides = [];
+    for (int i = 0; i < imgList.length; i++) {
+      Widget imageCard = CustomGestureDetector(imgList, i);
+      imageSlides.add(imageCard);
+    }
+
+    return imageSlides;
+  }
+
+  Widget CustomGestureDetector(List<String> imgList, int index) {
+    return GestureDetector(
+      onTap: () {
+        navigateToNewsPage(index);
+      },
+      child: Container(
+        child: Container(
+          margin: EdgeInsets.all(5.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                Image.network(imgList[index], fit: BoxFit.cover, width: 1000.0),
+                // Positioned(
+                //   bottom: 0.0,
+                //   left: 0.0,
+                //   right: 0.0,
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       gradient: LinearGradient(
+                //         colors: [
+                //           Color.fromARGB(200, 0, 0, 0),
+                //           Color.fromARGB(0, 0, 0, 0)
+                //         ],
+                //         begin: Alignment.bottomCenter,
+                //         end: Alignment.topCenter,
+                //       ),
+                //     ),
+                //     padding: EdgeInsets.symmetric(
+                //         vertical: 10.0, horizontal: 20.0),
+                //     child: Text(
+                //       'No. ${imgList.indexOf(item)} image',
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 20.0,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+              ],
             ),
-          ))
-      .toList();
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget DianoseNow() {
     return Container(
@@ -102,7 +130,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
-        onPressed: null,
+        onPressed: navigateToReportPage,
         child: Text(
           "Check Report",
           textAlign: TextAlign.center,
@@ -120,7 +148,7 @@ class _HomePageState extends State<HomePage> {
           aspectRatio: 2.0,
           enlargeCenterPage: true,
         ),
-        items: imageSliders,
+        items: CreateImageSlides(imgList),
       ),
     );
   }

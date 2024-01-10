@@ -18,7 +18,7 @@ class _LoginInPageState extends State<LoginInPage> {
         .push(MaterialPageRoute(builder: (context) => const SignUpPage()));
   }
 
-  void navigateToNextPage() {
+  void navigateToHomePage() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
@@ -100,7 +100,7 @@ class _LoginInPageState extends State<LoginInPage> {
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
-        onPressed: navigateToNextPage,
+        onPressed: navigateToHomePage,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               Colors.black), // Background color of the button
@@ -117,6 +117,7 @@ class _LoginInPageState extends State<LoginInPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        centerTitle: false,
         leading: Padding(
           padding: const EdgeInsets.only(left: 40.0),
           child: Icon(
