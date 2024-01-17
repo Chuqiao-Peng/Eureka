@@ -121,6 +121,10 @@ class _ReportListPageState extends State<ReportListPage> {
           children: <Widget>[
             SizedBox(height: 20),
             TopWindow(),
+            Container(
+              height: 20,
+              color: Colors.purple,
+            ),
             ReportList(),
           ],
         ),

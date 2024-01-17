@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000594069805",
+    "project_id": "eureka-44973",
+    "storage_bucket": "eureka-44973.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000594069805:android:80052c90b1ec8decf19ba4",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtU4qWeKSqZ4QMO1_BV1faJlWBTWnqc4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

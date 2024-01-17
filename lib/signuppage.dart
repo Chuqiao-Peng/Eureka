@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/homepage.dart';
 import 'package:flutter_application/loginpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -10,6 +11,10 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _emailController = TextEditingController();
+  final _passwordController1 = TextEditingController();
+  final _passwordController2 = TextEditingController();
+
   bool obscureValue1 = true;
   bool obscureValue2 = true;
 
@@ -28,6 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
       height: 35.0,
       width: 350.0,
       child: TextField(
+        controller: _emailController,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(8.0),
           hintText: hintValue,
@@ -58,6 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
       height: 35.0,
       width: 350.0,
       child: TextField(
+        controller: _passwordController1,
         obscureText: obscureValue1,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(8.0),
@@ -100,6 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
       height: 35.0,
       width: 350.0,
       child: TextField(
+        controller: _passwordController2,
         obscureText: obscureValue2,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(8.0),
@@ -142,7 +150,20 @@ class _SignUpPageState extends State<SignUpPage> {
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
-        onPressed: navigateToHomePage,
+        onPressed: () {
+          // Create a user account for firebase authentication
+          String email_text = _emailController.text;
+          String password_text = _passwordController2.text;
+          FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+            email: email_text,
+            password: password_text,
+          )
+              // Finish creating account for authentication
+              .then((_) {
+            navigateToHomePage();
+          });
+        },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               Colors.black), // Background color of the button

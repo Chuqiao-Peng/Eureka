@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/signuppage.dart';
 import 'package:flutter_application/homepage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginInPage extends StatefulWidget {
   const LoginInPage({super.key});
@@ -10,6 +11,9 @@ class LoginInPage extends StatefulWidget {
 }
 
 class _LoginInPageState extends State<LoginInPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool obscureValue = true;
   bool rememberValue = true;
 
@@ -28,6 +32,7 @@ class _LoginInPageState extends State<LoginInPage> {
       height: 35.0,
       width: 350.0,
       child: TextField(
+        controller: _emailController,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(8.0),
           hintText: hintValue,
@@ -58,6 +63,7 @@ class _LoginInPageState extends State<LoginInPage> {
       height: 35.0,
       width: 350.0,
       child: TextField(
+        controller: _passwordController,
         obscureText: obscureValue,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(8.0),
@@ -100,7 +106,16 @@ class _LoginInPageState extends State<LoginInPage> {
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
-        onPressed: navigateToHomePage,
+        onPressed: () {
+          FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+            email: _emailController.text,
+            password: _passwordController.text,
+          )
+              .then((_) {
+            navigateToHomePage();
+          });
+        },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               Colors.black), // Background color of the button
