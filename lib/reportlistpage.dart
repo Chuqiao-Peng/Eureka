@@ -1,14 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/reportpage.dart';
+import 'package:flutter_application/settingspage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReportListPage extends StatefulWidget {
-  const ReportListPage({super.key});
+  final String user_email;
+  const ReportListPage({super.key, required this.user_email});
 
   @override
   State<ReportListPage> createState() => _ReportListPageState();
 }
 
+
 class _ReportListPageState extends State<ReportListPage> {
+  late Future<List> reportList;   // Variable to hold the list of reports
+
+  // Tells the page what to do when it first opens
+  @override
+  void initState() {
+    super.initState();
+    reportList = QueryReportList(); // Asking the db for a list of the user's reports
+  }
+
+  Future<List> QueryReportList() async {
+    final db = await FirebaseFirestore.instance;  // Connect to database
+    List reportList = [];
+    
+    // Ask the database for reports
+    await db.collection("Users").doc(widget.user_email).collection("Reports").get().then(
+      (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          reportList.add(docSnapshot.id);
+          // print(docSnapshot.data());
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return reportList;
+  }
+
   Widget TopWindow() {
     return Container(
       child: Padding(
@@ -40,7 +71,7 @@ class _ReportListPageState extends State<ReportListPage> {
         .push(MaterialPageRoute(builder: (context) => ReportPage()));
   }
 
-  Widget ReportRow() {
+  Widget ReportRow(String reportName) {
     return GestureDetector(
       onTap: () {
         navigateToReportPage();
@@ -52,7 +83,7 @@ class _ReportListPageState extends State<ReportListPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Icon(Icons.settings),
-              Text("Your Report"),
+              Text(reportName),
               Icon(
                 Icons.arrow_forward_ios,
                 size: 15,
@@ -62,7 +93,16 @@ class _ReportListPageState extends State<ReportListPage> {
     );
   }
 
-  Widget ReportList() {
+  List<Widget> generateReportRows(List reportList) {
+    List<Widget> reportRows = [];
+    for (int i = 0; i < reportList.length; i++)
+    {
+      reportRows.add(ReportRow(reportList[i]));
+    }
+    return reportRows;
+  }
+
+  Widget ReportList(List reportList) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -80,13 +120,7 @@ class _ReportListPageState extends State<ReportListPage> {
               child: Container(
                 height: 200,
                 child: ListView(
-                  children: <Widget>[
-                    ReportRow(),
-                    ReportRow(),
-                    ReportRow(),
-                    ReportRow(),
-                    ReportRow(),
-                  ],
+                  children: generateReportRows(reportList),
                 ),
               ),
             ),
@@ -94,6 +128,19 @@ class _ReportListPageState extends State<ReportListPage> {
         ),
       ),
     );
+  }
+
+  Widget FutureReportList() {
+    return FutureBuilder(future: reportList, builder: (context, snapshot) {
+      if(snapshot.hasData) {
+        // render the report list on screen
+        List reportList = snapshot.data as List;
+        return ReportList(reportList);      
+      } else {
+        return Text("An error occurred. Could not get report list");
+      }
+
+    });
   }
 
   @override
@@ -125,7 +172,7 @@ class _ReportListPageState extends State<ReportListPage> {
               height: 20,
               color: Colors.purple,
             ),
-            ReportList(),
+            FutureReportList(),
           ],
         ),
       ),

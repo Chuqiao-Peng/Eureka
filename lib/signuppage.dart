@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/homepage.dart';
 import 'package:flutter_application/loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -11,6 +12,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController1 = TextEditingController();
   final _passwordController2 = TextEditingController();
@@ -20,7 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void navigateToHomePage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const HomePage()));
+        .push(MaterialPageRoute(builder: (context) => HomePage(user_email: _emailController.text)));
   }
 
   void navigateToLoginPage() {
@@ -28,7 +30,38 @@ class _SignUpPageState extends State<SignUpPage> {
         .push(MaterialPageRoute(builder: (context) => const LoginInPage()));
   }
 
-  Widget CustomTextField(String hintValue) {
+Widget NameTextField(String hintValue) {
+    return Container(
+      height: 35.0,
+      width: 350.0,
+      child: TextField(
+        controller: _nameController,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(8.0),
+          hintText: hintValue,
+          filled: true,
+          fillColor: Colors.white, // Background color of the text field
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+                50.0), // Adjust the value to control the roundness
+            borderSide: BorderSide(
+              color: Colors.purple, // Border color
+              width: 4,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50.0),
+            borderSide: BorderSide(
+              color: Colors.purple, // Border color when focused
+              width: 4,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget EmailTextField(String hintValue) {
     return Container(
       height: 35.0,
       width: 350.0,
@@ -145,25 +178,49 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  void SignUp() async {
+    // Create a user account for firebase authentication
+    String name_text = _nameController.text;
+    String email_text = _emailController.text;
+    String password_text = _passwordController2.text;
+
+    // Create an account
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: email_text,
+      password: password_text,
+    );
+
+    final profileInfo = {
+      "full_name": name_text,
+      "email": email_text,
+      "age": 0,
+      "sex": "?",
+      "height": 0,
+      "weight": 0,
+      "race": "?",
+    };
+
+    final reportInfo = {
+      "signals": [1, 2, 3, 4, 5, 6],
+    };
+
+    // Allocate space for user data in the database
+    final db = await FirebaseFirestore.instance;  // Connect to database
+    await db.collection("Users").doc(email_text).set(profileInfo);    // Creates a user folder in the database
+    await db.collection("Users").doc(email_text).collection("Reports").doc(DateTime.now().toString()).set(reportInfo); // creates report list in user
+
+
+    // Navigate to homepage
+    navigateToHomePage();
+  }
+
   Widget SignUpButton() {
     return Container(
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
-        onPressed: () {
-          // Create a user account for firebase authentication
-          String email_text = _emailController.text;
-          String password_text = _passwordController2.text;
-          FirebaseAuth.instance
-              .createUserWithEmailAndPassword(
-            email: email_text,
-            password: password_text,
-          )
-              // Finish creating account for authentication
-              .then((_) {
-            navigateToHomePage();
-          });
-        },
+        onPressed: SignUp,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               Colors.black), // Background color of the button
@@ -216,9 +273,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               SizedBox(height: 50),
-              CustomTextField("Email or Phone Number"),
+              NameTextField("Full Name"),
               SizedBox(height: 20),
-              CustomTextField("Full Name"),
+              EmailTextField("Email or Phone Number"),
               SizedBox(height: 20),
               CustomPasswordField1("Password"),
               Text(
