@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/reportpage.dart';
-import 'package:flutter_application/settingspage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application/main.dart';
 
 class ReportListPage extends StatefulWidget {
-  final String user_email;
-  const ReportListPage({super.key, required this.user_email});
+  const ReportListPage({super.key});
 
   @override
   State<ReportListPage> createState() => _ReportListPageState();
@@ -14,11 +14,13 @@ class ReportListPage extends StatefulWidget {
 
 class _ReportListPageState extends State<ReportListPage> {
   late Future<List> reportList;   // Variable to hold the list of reports
+  late User user;
 
   // Tells the page what to do when it first opens
   @override
   void initState() {
     super.initState();
+    user = auth.currentUser!;
     reportList = QueryReportList(); // Asking the db for a list of the user's reports
   }
 
@@ -27,7 +29,7 @@ class _ReportListPageState extends State<ReportListPage> {
     List reportList = [];
     
     // Ask the database for reports
-    await db.collection("Users").doc(widget.user_email).collection("Reports").get().then(
+    await db.collection("Users").doc(user.uid).collection("Reports").get().then(
       (querySnapshot) {
         for (var docSnapshot in querySnapshot.docs) {
           reportList.add(docSnapshot.id);
@@ -175,22 +177,6 @@ class _ReportListPageState extends State<ReportListPage> {
             FutureReportList(),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.addchart),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
-          ),
-        ],
       ),
     );
   }

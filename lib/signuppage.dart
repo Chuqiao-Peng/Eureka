@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/homepage.dart';
 import 'package:flutter_application/loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application/navigationpage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,9 +20,9 @@ class _SignUpPageState extends State<SignUpPage> {
   bool obscureValue1 = true;
   bool obscureValue2 = true;
 
-  void navigateToHomePage() {
+  void navigateToNavigationPage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomePage(user_email: _emailController.text)));
+        .push(MaterialPageRoute(builder: (context) => NavigationPage()));
   }
 
   void navigateToLoginPage() {
@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
         .push(MaterialPageRoute(builder: (context) => const LoginInPage()));
   }
 
-Widget NameTextField(String hintValue) {
+  Widget NameTextField(String hintValue) {
     return Container(
       height: 35.0,
       width: 350.0,
@@ -178,6 +178,20 @@ Widget NameTextField(String hintValue) {
     );
   }
 
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1900, 3),
+        lastDate: DateTime(2030));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
   void SignUp() async {
     // Create a user account for firebase authentication
     String name_text = _nameController.text;
@@ -185,8 +199,8 @@ Widget NameTextField(String hintValue) {
     String password_text = _passwordController2.text;
 
     // Create an account
-    await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
+    UserCredential cred =
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email_text,
       password: password_text,
     );
@@ -206,13 +220,20 @@ Widget NameTextField(String hintValue) {
     };
 
     // Allocate space for user data in the database
-    final db = await FirebaseFirestore.instance;  // Connect to database
-    await db.collection("Users").doc(email_text).set(profileInfo);    // Creates a user folder in the database
-    await db.collection("Users").doc(email_text).collection("Reports").doc(DateTime.now().toString()).set(reportInfo); // creates report list in user
-
+    final db = await FirebaseFirestore.instance; // Connect to database
+    await db
+        .collection("Users")
+        .doc(cred.user?.uid)
+        .set(profileInfo); // Creates a user folder in the database
+    await db
+        .collection("Users")
+        .doc(cred.user?.uid)
+        .collection("Reports")
+        .doc(DateTime.now().toString())
+        .set(reportInfo); // creates report list in user
 
     // Navigate to homepage
-    navigateToHomePage();
+    navigateToNavigationPage();
   }
 
   Widget SignUpButton() {
@@ -288,6 +309,10 @@ Widget NameTextField(String hintValue) {
               SizedBox(height: 20),
               CustomPasswordField2("Confirm Password"),
               SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: const Text('Select date'),
+              ),
               SignUpButton(),
               SizedBox(height: 10),
               Row(
@@ -298,7 +323,7 @@ Widget NameTextField(String hintValue) {
                       style: TextStyle(color: Colors.purple),
                     ),
                     TextButton(
-                        onPressed: navigateToLoginPage,
+                        onPressed: navigateToNavigationPage,
                         child: Text(
                           "Log In",
                           style: TextStyle(

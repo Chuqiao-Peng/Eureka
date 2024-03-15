@@ -13,6 +13,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+
     // Delay
     Timer(Duration(milliseconds: 2500), navigateToHomePage);
   }

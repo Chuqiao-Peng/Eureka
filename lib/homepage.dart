@@ -6,10 +6,12 @@ import 'package:flutter_application/newspage.dart';
 import 'package:flutter_application/settingspage.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application/main.dart';
+
 
 class HomePage extends StatefulWidget {
-  final String user_email;
-  const HomePage({super.key, required this.user_email});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,12 +19,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<Map> newsData;
+  late User user;
 
   // Tells the page what to do when it first opens
   @override
   void initState() {
     super.initState();
+    user = auth.currentUser!;
     newsData = getNewsInfo();
+    
   }
 
   Future<Map> getNewsInfo() async {
@@ -31,7 +36,7 @@ class _HomePageState extends State<HomePage> {
       final response = await http.get(Uri.parse(link));
       final Map<String, dynamic> newsData = jsonDecode(response.body);
 
-      print(newsData);
+      // print(newsData);
 
       return newsData;
     } catch (e) {
@@ -41,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   void navigateToReportPage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ReportListPage(user_email: widget.user_email)));
+        .push(MaterialPageRoute(builder: (context) => ReportListPage()));
   }
 
   void navigateToNewsPage(Map<String, dynamic> newsData) {
@@ -90,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     };
 
     final db = await FirebaseFirestore.instance;  // Connect to database
-    await db.collection("Users").doc(widget.user_email).collection("Reports").doc(DateTime.now().toString()).set(reportInfo); 
+    await db.collection("Users").doc(user.uid).collection("Reports").doc(DateTime.now().toString()).set(reportInfo); 
   }
 
   Widget DianoseNow() {
@@ -226,26 +231,6 @@ class _HomePageState extends State<HomePage> {
             NewsSection(),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.addchart),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.settings),
-          //   label: "",
-          // ),
-        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/main.dart';
 import 'package:flutter_application/signuppage.dart';
-import 'package:flutter_application/homepage.dart';
+import 'package:flutter_application/navigationpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginInPage extends StatefulWidget {
@@ -17,14 +18,24 @@ class _LoginInPageState extends State<LoginInPage> {
   bool obscureValue = true;
   bool rememberValue = true;
 
+  @override
+    void initState() {
+      super.initState();
+      auth.authStateChanges().listen((User? user){
+        if(user != null){
+          navigateToNavigationPage();
+        }
+      });
+    }
+
   void navigateToSignUpPage() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const SignUpPage()));
   }
 
-  void navigateToHomePage() {
+  void navigateToNavigationPage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomePage(user_email: _emailController.text)));
+        .push(MaterialPageRoute(builder: (context) => NavigationPage()));
   }
 
   Widget CustomTextField(String hintValue) {
@@ -113,7 +124,7 @@ class _LoginInPageState extends State<LoginInPage> {
             password: _passwordController.text,
           )
               .then((_) {
-            navigateToHomePage();
+            navigateToNavigationPage();
           });
         },
         style: ButtonStyle(
