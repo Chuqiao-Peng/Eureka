@@ -1,4 +1,4 @@
-# flutter_application
+# Σureka_application
 
 A new Flutter project.
 
