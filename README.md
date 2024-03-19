@@ -8,7 +8,7 @@ Visit our website at [eurekau.org](https://eurekau.org) for more information.
 
 Σureka is a groundbreaking project focused on enhancing public health through the development of advanced smartwatch technology. Our goal is to provide individuals with early warnings for potential drug or alcohol overdoses, ultimately saving lives and improving healthcare outcomes.
 
-## Features
+## Application Features
 
 - Python backend development for robust data processing and analysis
 - Flutter frontend design for a user-friendly interface
