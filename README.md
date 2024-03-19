@@ -1,16 +1,24 @@
-# Σureka_application
+# Σureka
 
-A new Flutter project.
+Σureka aims to revolutionize public health by developing innovative smartwatch technology capable of predicting drug or alcohol overdoses, utilizing Electrocardiographic Biometric Technology and Artificial Intelligence.
 
-## Getting Started
+Visit our website at [eurekau.org](https://eurekau.org) for more information.
 
-This project is a starting point for a Flutter application.
+## About Σureka
 
-A few resources to get you started if this is your first Flutter project:
+Σureka is a groundbreaking project focused on enhancing public health through the development of advanced smartwatch technology. Our goal is to provide individuals with early warnings for potential drug or alcohol overdoses, ultimately saving lives and improving healthcare outcomes.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Features
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Utilizes Electrocardiographic Biometric Technology and Artificial Intelligence for overdose prediction
+- Aims to revolutionize public health and improve healthcare outcomes
+
+## Get Involved
+
+We welcome collaboration and contributions from individuals and organizations interested in advancing public health technology and improving healthcare accessibility. Join us in our mission to create innovative solutions that save lives and promote well-being.
+
+## Contact Us
+
+For inquiries and partnership opportunities, please email us at chuqiao0727@gmail.com.
+
+Follow us on [Instagram](https://instagram.com/eureka_tech_co) for updates and announcements.
