@@ -1,4 +1,4 @@
-# Σureka Application
+# Σureka
 
 Σureka aims to revolutionize public health by developing innovative smartwatch technology capable of predicting drug or alcohol overdoses, utilizing Electrocardiographic Biometric Technology and Artificial Intelligence.
 
