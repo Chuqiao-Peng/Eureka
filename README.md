@@ -1,4 +1,4 @@
-# Σureka
+# Σureka Application
 
 Σureka aims to revolutionize public health by developing innovative smartwatch technology capable of predicting drug or alcohol overdoses, utilizing Electrocardiographic Biometric Technology and Artificial Intelligence.
 
@@ -10,6 +10,8 @@ Visit our website at [eurekau.org](https://eurekau.org) for more information.
 
 ## Features
 
+- Python backend development for robust data processing and analysis
+- Flutter frontend design for a user-friendly interface
 - Utilizes Electrocardiographic Biometric Technology and Artificial Intelligence for overdose prediction
 - Aims to revolutionize public health and improve healthcare outcomes
 
