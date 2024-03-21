@@ -42,32 +42,6 @@ class _ReportListPageState extends State<ReportListPage> {
     return reportList;
   }
 
-  Widget TopWindow() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text("Most Recent Report"),
-              ],
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(7.0),
-              child: Container(
-                height: 200,
-                color: Colors.purple,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void navigateToReportPage() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ReportPage()));
@@ -169,10 +143,9 @@ class _ReportListPageState extends State<ReportListPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 20),
-            TopWindow(),
             Container(
               height: 20,
-              color: Colors.purple,
+              color: Colors.grey,
             ),
             FutureReportList(),
           ],

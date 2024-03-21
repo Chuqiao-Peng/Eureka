@@ -4,11 +4,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application/reportlistpage.dart';
 import 'package:flutter_application/newspage.dart';
 import 'package:flutter_application/settingspage.dart';
+import 'package:flutter_application/weeklyreportpage.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application/main.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     user = auth.currentUser!;
     newsData = getNewsInfo();
-    
   }
 
   Future<Map> getNewsInfo() async {
@@ -44,9 +43,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void navigateToReportPage() {
+  void navigateToWeeklyReportPage() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ReportListPage()));
+        .push(MaterialPageRoute(builder: (context) => WeeklyReportPage()));
   }
 
   void navigateToNewsPage(Map<String, dynamic> newsData) {
@@ -54,8 +53,8 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => NewsPage(newsData: newsData)));
   }
 
-  void navigateToSettings(){
-     Navigator.of(context)
+  void navigateToSettings() {
+    Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const SettingsPage()));
   }
 
@@ -90,12 +89,59 @@ class _HomePageState extends State<HomePage> {
   }
 
   void SubmitDummyValues() async {
+
+
+    DateTime date = DateTime.now();
+    date = DateTime(date.year, 2, 18);
+
+    int weekOfYear = date.weekday == DateTime.sunday
+        ? date.difference(DateTime(date.year, 1, 1)).inDays ~/ 7 + 1
+        : date.difference(DateTime(date.year, 1, 1)).inDays ~/ 7;
+    String docIDweek = "week" + weekOfYear.toString();
+
+    final db = await FirebaseFirestore.instance; // Connect to database
+
+    // Checks to see if week exists
+    final weekExists = await db
+        .collection("Users")
+        .doc(user.uid)
+        .collection("weekly_reports")
+        .get()
+        .then(
+      (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          if (docSnapshot.id == docIDweek) {
+            return true;
+          }
+        }
+        return false;
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    final weekInfo = {
+      "warnings": 0
+    };
+    if (!weekExists) {
+      await db
+          .collection("Users")
+          .doc(user.uid)
+          .collection("weekly_reports") // create colletion for weeks
+          .doc(docIDweek)
+          .set(weekInfo); // Add warnings field
+    }
+
     final reportInfo = {
       "signals": [1, 2, 3, 4, 5, 6]
     };
-
-    final db = await FirebaseFirestore.instance;  // Connect to database
-    await db.collection("Users").doc(user.uid).collection("Reports").doc(DateTime.now().toString()).set(reportInfo); 
+    await db
+        .collection("Users")
+        .doc(user.uid)
+        .collection("weekly_reports")
+        .doc(docIDweek)
+        .collection("reports")
+        .doc(date.toString())
+        .set(reportInfo);
   }
 
   Widget DianoseNow() {
@@ -139,7 +185,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
-        onPressed: navigateToReportPage,
+        onPressed: navigateToWeeklyReportPage,
         child: Text(
           "Check Report",
           textAlign: TextAlign.center,

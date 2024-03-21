@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/homepage.dart';
-import 'package:flutter_application/reportlistpage.dart';
+import 'package:flutter_application/weeklyreportpage.dart';
 import 'package:flutter_application/aichatpage.dart';
 import 'package:flutter_application/settingspage.dart';
 
@@ -18,7 +18,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   static final List<Widget> pages = <Widget>[
     const HomePage(),
-    const ReportListPage(),
+    const WeeklyReportPage(),
     const AIChatPage(),
     const SettingsPage(),
   ];

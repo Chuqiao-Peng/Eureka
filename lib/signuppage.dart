@@ -215,22 +215,34 @@ class _SignUpPageState extends State<SignUpPage> {
       "race": "?",
     };
 
-    final reportInfo = {
-      "signals": [1, 2, 3, 4, 5, 6],
-    };
-
     // Allocate space for user data in the database
     final db = await FirebaseFirestore.instance; // Connect to database
     await db
         .collection("Users")
         .doc(cred.user?.uid)
         .set(profileInfo); // Creates a user folder in the database
+
+    final weekInfo = {
+      "warnings": 0,
+    };
     await db
         .collection("Users")
         .doc(cred.user?.uid)
-        .collection("Reports")
+        .collection("weekly_reports")
+        .doc("week11")
+        .set(weekInfo); // creates weekly report list in user
+
+    final reportInfo = {
+      "signals": [1, 2, 3, 4, 5, 6],
+    };
+    await db
+        .collection("Users")
+        .doc(cred.user?.uid)
+        .collection("weekly_reports")
+        .doc("week11")
+        .collection("reports")
         .doc(DateTime.now().toString())
-        .set(reportInfo); // creates report list in user
+        .set(reportInfo);
 
     // Navigate to homepage
     navigateToNavigationPage();
