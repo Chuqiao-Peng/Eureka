@@ -178,20 +178,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  DateTime selectedDate = DateTime.now();
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1900, 3),
-        lastDate: DateTime(2030));
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
   void SignUp() async {
     // Create a user account for firebase authentication
     String name_text = _nameController.text;
@@ -200,7 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     // Create an account
     UserCredential cred =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email_text,
       password: password_text,
     );
@@ -222,27 +208,27 @@ class _SignUpPageState extends State<SignUpPage> {
         .doc(cred.user?.uid)
         .set(profileInfo); // Creates a user folder in the database
 
-    final weekInfo = {
-      "warnings": 0,
-    };
-    await db
-        .collection("Users")
-        .doc(cred.user?.uid)
-        .collection("weekly_reports")
-        .doc("week11")
-        .set(weekInfo); // creates weekly report list in user
+    // final weekInfo = {
+    //   "warnings": 0,
+    // };
+    // await db
+    //     .collection("Users")
+    //     .doc(cred.user?.uid)
+    //     .collection("weekly_reports")
+    //     .doc("week11")
+    //     .set(weekInfo); // creates weekly report list in user
 
-    final reportInfo = {
-      "signals": [1, 2, 3, 4, 5, 6],
-    };
-    await db
-        .collection("Users")
-        .doc(cred.user?.uid)
-        .collection("weekly_reports")
-        .doc("week11")
-        .collection("reports")
-        .doc(DateTime.now().toString())
-        .set(reportInfo);
+    // final reportInfo = {
+    //   "signals": [1, 2, 3, 4, 5, 6],
+    // };
+    // await db
+    //     .collection("Users")
+    //     .doc(cred.user?.uid)
+    //     .collection("weekly_reports")
+    //     .doc("week11")
+    //     .collection("reports")
+    //     .doc(DateTime.now().toString())
+    //     .set(reportInfo);
 
     // Navigate to homepage
     navigateToNavigationPage();
@@ -261,6 +247,103 @@ class _SignUpPageState extends State<SignUpPage> {
               Colors.white), // Text color of the buttonof the button
         ),
         child: Text('Sign Up'),
+      ),
+    );
+  }
+
+  Widget birthdayDropdown() {
+    DateTime date = DateTime.now();
+
+    List months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    String selectedDay = date.day.toString(); // Default today's date
+    String selectedMonth = months[date.month-1];
+    String selectedYear = date.year.toString();
+
+    List<DropdownMenuItem<String>> dayItems =
+        List<String>.generate(31, (index) => '${index + 1}')
+            .map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList();
+
+    List<DropdownMenuItem<String>> monthItems = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ].map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList();
+
+    List<DropdownMenuItem<String>> yearItems =
+        List<String>.generate(100, (index) => '${DateTime.now().year - index}')
+            .map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList();
+
+    return Container(
+      width: 350,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          DropdownButton<String>(
+            value: selectedDay,
+            onChanged: (newValue) {
+              setState(() {
+                selectedDay = newValue!;
+              });
+            },
+            items: dayItems,
+          ),
+          DropdownButton<String>(
+            value: selectedMonth,
+            onChanged: (newValue) {
+              setState(() {
+                selectedMonth = newValue!;
+              });
+            },
+            items: monthItems,
+          ),
+          DropdownButton<String>(
+            value: selectedYear,
+            onChanged: (newValue) {
+              setState(() {
+                selectedYear = newValue!;
+              });
+            },
+            items: yearItems,
+          ),
+        ],
       ),
     );
   }
@@ -321,10 +404,8 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(height: 20),
               CustomPasswordField2("Confirm Password"),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _selectDate(context),
-                child: const Text('Select date'),
-              ),
+              birthdayDropdown(),
+              SizedBox(height: 40),
               SignUpButton(),
               SizedBox(height: 10),
               Row(
@@ -335,7 +416,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(color: Colors.purple),
                     ),
                     TextButton(
-                        onPressed: navigateToNavigationPage,
+                        onPressed: () {Navigator.pop(context); },
                         child: Text(
                           "Log In",
                           style: TextStyle(

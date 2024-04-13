@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application/reportlistpage.dart';
+import 'package:flutter_application/navigationpage.dart';
 import 'package:flutter_application/newspage.dart';
 import 'package:flutter_application/settingspage.dart';
 import 'package:flutter_application/weeklyreportpage.dart';
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<Map> newsData;
   late User user;
+  // Initialize the index for the news carousel
+  int _currentCard = 0;
 
   // Tells the page what to do when it first opens
   @override
@@ -58,95 +61,114 @@ class _HomePageState extends State<HomePage> {
         .push(MaterialPageRoute(builder: (context) => const SettingsPage()));
   }
 
-  Widget CustomGestureDetector(Map<String, dynamic> newsData) {
-    return GestureDetector(
-      onTap: () {
-        navigateToNewsPage(newsData);
-      },
-      child: Container(
-        child: Container(
-          margin: EdgeInsets.all(5.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                Image.network(newsData["image"],
-                    fit: BoxFit.cover, width: 1000.0),
-              ],
-            ),
+  Widget CarouselCards(Map<String, dynamic> newsData) {
+    String article_headline = newsData["article_title"];
+    String article_brief = newsData["article_content"].substring(0, 20) + "...";
+    String image_url = newsData["image"];
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(article_headline),
+              Wrap(
+                children: <Widget>[
+                  Text(article_brief),
+                ],
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          10.0), // Adjust the value to control the roundness
+                    ),
+                  ),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      EdgeInsets.all(16.0)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromRGBO(121, 134, 203, 1)),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                onPressed: () {
+                  navigateToNewsPage(newsData);
+                },
+                child: Text("View More"),
+              ),
+            ],
           ),
-        ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.network(image_url, fit: BoxFit.cover, width: 150.0)
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Future<String> triggerDevice() async {
-    String link =
-        'https://api.particle.io/v1/devices/e00fce684219e0e249d5bc42/readECG?access_token=40c9617030f65832904eb99528de3da5e7ebfe66';
-    http.post(Uri.parse(link));
-    return "Sent Request";
-  }
-
-  void SubmitDummyValues() async {
-
-
-    DateTime date = DateTime.now();
-    date = DateTime(date.year, 2, 18);
-
-    int weekOfYear = date.weekday == DateTime.sunday
-        ? date.difference(DateTime(date.year, 1, 1)).inDays ~/ 7 + 1
-        : date.difference(DateTime(date.year, 1, 1)).inDays ~/ 7;
-    String docIDweek = "week" + weekOfYear.toString();
-
+  Future<bool> isDataValid() async {
+    // Query for user data
     final db = await FirebaseFirestore.instance; // Connect to database
 
-    // Checks to see if week exists
-    final weekExists = await db
-        .collection("Users")
-        .doc(user.uid)
-        .collection("weekly_reports")
-        .get()
-        .then(
-      (querySnapshot) {
-        for (var docSnapshot in querySnapshot.docs) {
-          if (docSnapshot.id == docIDweek) {
-            return true;
-          }
-        }
-        return false;
+    final user_data = await db.collection("Users").doc(user.uid).get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return data;
       },
       onError: (e) => print("Error completing: $e"),
     );
 
-    final weekInfo = {
-      "warnings": 0
-    };
-    if (!weekExists) {
-      await db
-          .collection("Users")
-          .doc(user.uid)
-          .collection("weekly_reports") // create colletion for weeks
-          .doc(docIDweek)
-          .set(weekInfo); // Add warnings field
+    if (user_data["age"] == "" || user_data["age"] == 0) {
+      return false;
+    } else if (user_data["sex"] == "" || user_data["sex"] == "?") {
+      return false;
+    } else if (user_data["height"] == "" || user_data["height"] == 0) {
+      return false;
+    } else if (user_data["weight"] == "" || user_data["weight"] == 0) {
+      return false;
+    } else if (user_data["race"] == "" || user_data["race"] == "?") {
+      return false;
     }
+    return true;
+  }
 
-    final reportInfo = {
-      "signals": [1, 2, 3, 4, 5, 6]
-    };
-    await db
-        .collection("Users")
-        .doc(user.uid)
-        .collection("weekly_reports")
-        .doc(docIDweek)
-        .collection("reports")
-        .doc(date.toString())
-        .set(reportInfo);
+  void diagnoseFunction() async {
+    if (await isDataValid()) {
+      triggerDevice();
+    } else {
+      showWarningPopUp(context);
+    }
+  }
+
+  Future<int> triggerDevice() async {
+    String link =
+        'https://api.particle.io/v1/devices/e00fce684219e0e249d5bc42/uploadEKGData?access_token=40c9617030f65832904eb99528de3da5e7ebfe66';
+
+    Map data = {'args': user.uid};
+
+    var body = json.encode(data);
+
+    var response = await http.post(Uri.parse(link),
+        headers: {"Content-Type": "application/json"}, body: body);
+
+    if (response.statusCode == 200) {
+      print("Successfully triggered sensor to start reading...");
+      return 1;
+    }
+    return 0;
   }
 
   Widget DianoseNow() {
     return Container(
-      width: 300,
+      width: 350,
+      height: 60,
       child: ElevatedButton(
         style: ButtonStyle(
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -157,12 +179,14 @@ class _HomePageState extends State<HomePage> {
           ),
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
               EdgeInsets.all(16.0)),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              const Color.fromRGBO(121, 134, 203, 1)),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
-        onPressed: SubmitDummyValues,
+        onPressed: diagnoseFunction,
         child: Text(
           "Diagnose Now",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           textAlign: TextAlign.center,
         ),
       ),
@@ -171,7 +195,8 @@ class _HomePageState extends State<HomePage> {
 
   Widget CheckReport() {
     return Container(
-      width: 300,
+      width: 350,
+      height: 60,
       child: ElevatedButton(
         style: ButtonStyle(
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -182,74 +207,121 @@ class _HomePageState extends State<HomePage> {
           ),
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
               EdgeInsets.all(16.0)),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              const Color.fromRGBO(121, 134, 203, 1)),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
-        onPressed: navigateToWeeklyReportPage,
+        onPressed: () {
+          setState(() {
+            selectedIndex = 1;
+          });
+        },
         child: Text(
           "Check Report",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           textAlign: TextAlign.center,
         ),
       ),
     );
   }
 
-  Widget NavigatetoSettingsButton() {
-    return Container(
-      width: 300,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  10.0), // Adjust the value to control the roundness
-            ),
-          ),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              EdgeInsets.all(16.0)),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        ),
-        onPressed: navigateToSettings,
-        child: Text(
-          "Navigate to Settings",
-          textAlign: TextAlign.center,
-        ),
-      ),
+  void showWarningPopUp(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
     );
+
+    CupertinoAlertDialog alert = CupertinoAlertDialog(
+      title: Text("Profile Incomplete!"),
+      content: Text(
+          "Navigate to the \"About Me\" page and fill out your information to begin diagnosis."),
+      actions: <Widget>[
+        cancelButton,
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 
   Widget NewsCarousel(List<Widget> news_cards) {
     return Container(
       child: CarouselSlider(
         options: CarouselOptions(
-          height: 370,
-          autoPlay: true,
-          aspectRatio: 2.0,
-          enlargeCenterPage: true,
-        ),
+            viewportFraction: 1.0,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentCard = index;
+              });
+            }),
         items: news_cards,
       ),
     );
   }
 
-  Widget NewsSection() {
+  Widget NewsIndicator(int amtOfCards) {
+    List<Widget> circles = [];
+
+    for (int i = 0; i < amtOfCards; i++) {
+      if (i == _currentCard) {
+        circles.add(Icon(Icons.circle));
+      } else {
+        circles.add(Icon(Icons.circle_outlined));
+      }
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: circles,
+    );
+  }
+
+  Widget FutureNewsSection() {
     return FutureBuilder(
         future: newsData,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // some other thing we need to do before return the carousel
             Map newsInfo = snapshot.data as Map;
-            List news = newsInfo.keys.toList();
-            List<Widget> newsCards = [];
-            for (int i = 0; i < news.length; i++) {
-              newsCards.add(CustomGestureDetector(newsInfo[news[i]]));
-            }
-            return NewsCarousel(newsCards);
+
+            return NewsSection(newsInfo);
           } else {
             return Text("Something went wrong...");
           }
         });
+  }
+
+  Widget NewsSection(Map newsInfo) {
+    print(newsInfo);
+
+    List news = newsInfo.keys.toList();
+    List<Widget> newsCards = [];
+    for (int i = 0; i < news.length; i++) {
+      newsCards.add(CarouselCards(newsInfo[news[i]]));
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        child: Container(
+          height: 300,
+          color: const Color.fromRGBO(197, 202, 233, 1),
+          child: Column(
+            children: <Widget>[
+              NewsCarousel(newsCards),
+              NewsIndicator(news.length),
+              SizedBox(height: 20.0),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -259,22 +331,20 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 60),
+            SizedBox(height: 85),
             Text(
               "Σureka",
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 80,
-              ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 60,
+                  color: const Color.fromRGBO(57, 73, 171, 1)),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 50),
             DianoseNow(),
             SizedBox(height: 20),
             CheckReport(),
-            SizedBox(height: 20),
-            NavigatetoSettingsButton(),
-            SizedBox(height: 20),
-            NewsSection(),
+            SizedBox(height: 90),
+            FutureNewsSection(),
           ],
         ),
       ),

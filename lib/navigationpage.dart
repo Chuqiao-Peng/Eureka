@@ -3,7 +3,9 @@ import 'package:flutter_application/homepage.dart';
 import 'package:flutter_application/weeklyreportpage.dart';
 import 'package:flutter_application/aichatpage.dart';
 import 'package:flutter_application/settingspage.dart';
+import 'package:flutter_application/my_flutter_app_icons.dart';
 
+int selectedIndex = 0;
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -13,9 +15,6 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-
-  int selectedIndex = 0;
-
   static final List<Widget> pages = <Widget>[
     const HomePage(),
     const WeeklyReportPage(),
@@ -25,8 +24,8 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void selectPage(int index) {
     setState(() {
-          selectedIndex = index;
-        });
+      selectedIndex = index;
+    });
   }
 
   @override
@@ -37,23 +36,23 @@ class _NavigationPageState extends State<NavigationPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: "",
+            label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.addchart),
-            label: "",
+            icon: Icon(Icons.file_copy),
+            label: "Reports",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
+            icon: Icon(MyFlutterApp.robot),
+            label: "AI Chat",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: "",
+            label: "Settings",
           ),
         ],
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.purple,
+        selectedItemColor: const Color.fromRGBO(57, 73, 171, 1),
         unselectedItemColor: Colors.grey,
         currentIndex: selectedIndex,
         onTap: selectPage,

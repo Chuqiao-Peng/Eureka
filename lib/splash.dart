@@ -15,7 +15,7 @@ class _SplashState extends State<Splash> {
     super.initState();
 
     // Delay
-    Timer(Duration(milliseconds: 2500), navigateToHomePage);
+    Timer(Duration(milliseconds: 108500), navigateToHomePage);
   }
 
   void navigateToHomePage() {
@@ -30,10 +30,14 @@ class _SplashState extends State<Splash> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              color: Colors.purple,
-              height: 50,
-              width: 50,
+            ClipRect(
+              child: Align(
+                alignment: Alignment.center,
+                widthFactor: 0.8,
+                child: Image.network(
+                  'https://drive.google.com/uc?export=view&id=1MmyY2puR3V0ghNH_5p4dHoEMOwGAMqj6',
+                ),
+              ),
             ),
             Text(
               "Σureka",

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/main.dart';
+import 'package:flutter_application/reportlistpage.dart';
 
 class WeeklyReportPage extends StatefulWidget {
   const WeeklyReportPage({super.key});
@@ -13,6 +14,11 @@ class WeeklyReportPage extends StatefulWidget {
 class _WeeklyReportPageState extends State<WeeklyReportPage> {
   late User user;
   late Future<List<QueryDocumentSnapshot>> weeklyReports;
+
+  void navigateToReportListPage(String weekId) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ReportListPage(weekId: weekId)));
+  }
 
   @override
   void initState() {
@@ -43,7 +49,43 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
       onError: (e) => print("Error completing: $e"),
     );
 
+    weeklySort(weeklyReportsList);
+
     return weeklyReportsList;
+  }
+
+  void weeklySort(List<QueryDocumentSnapshot> weekly_reports) {
+    int i, j, min_idx;
+
+    // One by one move boundary of unsorted subarray
+    for (i = 0; i < weekly_reports.length; i++) {
+      // Find the minimum element in
+      // unsorted array
+      min_idx = i;
+      for (j = i + 1; j < weekly_reports.length; j++) {
+        QueryDocumentSnapshot a = weekly_reports[min_idx];
+        QueryDocumentSnapshot b = weekly_reports[j];
+
+        int a_num = int.parse(a.id.substring(4));
+        int b_num = int.parse(b.id.substring(4));
+
+        if (a_num < b_num) {
+          min_idx = j;
+        }
+      }
+
+      // Swap the found minimum element
+      // with the first element
+      if (min_idx != i) {
+        QueryDocumentSnapshot temp = weekly_reports[min_idx];
+
+        weekly_reports.removeAt(min_idx);
+        weekly_reports.insert(min_idx, weekly_reports[i]);
+
+        weekly_reports.removeAt(i);
+        weekly_reports.insert(i, temp);
+      }
+    }
   }
 
   Widget FutureTopWindow() {
@@ -56,15 +98,16 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
             QueryDocumentSnapshot doc = reportList[0];
             Map data = doc.data() as Map;
             int warnings = data["warnings"];
+            String weekId = reportList[0].id;
 
-            return TopWindow(warnings);
+            return TopWindow(weekId, warnings);
           } else {
             return Text("An error occurred. Could not get warnings");
           }
         });
   }
 
-  Widget TopWindow(int warnings) {
+  Widget TopWindow(String weekId, int warnings) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -74,19 +117,23 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Most Recent Report"),
+                Text("Most Recent Report: " + weekId,
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],
             ),
+            SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(7.0),
               child: Container(
                 height: 200,
-                color: Colors.purple,
+                color: const Color.fromRGBO(121, 134, 203, 1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Column(
                       children: <Widget>[
+                        SizedBox(height: 20),
                         Row(
                           children: <Widget>[
                             Text(
@@ -108,12 +155,14 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
                         Row(
                           children: <Widget>[
                             ElevatedButton(
-                              onPressed: null,
-                              child: Text("View more"),
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.white),
                               ),
+                              onPressed: () {
+                                navigateToReportListPage(weekId);
+                              },
+                              child: Text("View more", style: TextStyle(color: const Color.fromRGBO(57, 73, 171, 1))),
                             ),
                           ],
                         ),
@@ -124,7 +173,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
                       children: <Widget>[
                         Icon(
                           Icons.circle_outlined,
-                          size: 80,
+                          size: 150,
                           color: Colors.white,
                         )
                       ],
@@ -163,7 +212,9 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Past Reports"),
+                Text("Past Reports",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],
             ),
             ClipRRect(
@@ -183,7 +234,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
 
   List<Widget> generateReportRows(List reportList) {
     List<Widget> reportRows = [];
-    for (int i = 0; i < reportList.length; i++) {
+    for (int i = 1; i < reportList.length; i++) {
       reportRows.add(ReportRow(reportList[i].id));
     }
     return reportRows;
@@ -192,51 +243,60 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
   Widget ReportRow(String reportName) {
     return GestureDetector(
       onTap: () {
-        null;
+        // Navigate to the ReportListPage upon tapping a report row
+        navigateToReportListPage(reportName);
       },
       child: Container(
+          height: 35,
           margin: const EdgeInsets.only(bottom: 5.0),
-          color: Color.fromARGB(255, 223, 173, 231),
+          color: const Color.fromRGBO(159, 168, 218, 1),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Icon(Icons.settings),
-              Text(reportName),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 15,
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: Icon(Icons.folder),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(reportName),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 260, right: 4.0),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
               ),
             ],
           )),
     );
   }
 
-  Widget Back() {
-    return Container(
-      width: 150,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: Row(
-          children: <Widget>[
-            Icon(Icons.arrow_back),
-            Text("Back"),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 40.0),
+          child: Icon(
+            Icons.file_copy,
+            color: const Color.fromRGBO(57, 73, 171, 1),
+          ),
+        ),
+        title: Text(
+          "Personal Reports",
+          style: TextStyle(
+              color: const Color.fromRGBO(57, 73, 171, 1), fontWeight: FontWeight.bold, fontSize: 24.0),
+        ),
+      ),
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 70),
-            Back(),
+            SizedBox(height: 40),
             FutureTopWindow(),
+            SizedBox(height: 40),
             FutureReportList(),
           ],
         ),

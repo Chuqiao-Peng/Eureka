@@ -41,6 +41,8 @@ dependencies:
   cloud_firestore: ^4.14.0
   firebase_database: ^10.4.0
   http: ^1.2.0
+  fl_chart: ^0.66.2
+  google_fonts: 6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +60,13 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/images/https://drive.google.com/uc?export=view&id=1MmyY2puR3V0ghNH_5p4dHoEMOwGAMqj6
+  fonts:
+    - family:  MyFlutterApp
+      fonts:
+        - asset: fonts/MyFlutterApp.ttf
+        
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
