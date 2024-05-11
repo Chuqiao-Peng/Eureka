@@ -1,15 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application/navigationpage.dart';
-import 'package:flutter_application/newspage.dart';
-import 'package:flutter_application/settingspage.dart';
-import 'package:flutter_application/weeklyreportpage.dart';
+import 'package:Eureka_HeartGuard/newspage.dart';
+import 'package:Eureka_HeartGuard/reportpage.dart';
+import 'package:Eureka_HeartGuard/settingspage.dart';
+import 'package:Eureka_HeartGuard/weeklyreportpage.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application/main.dart';
+import 'package:Eureka_HeartGuard/main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +24,8 @@ class _HomePageState extends State<HomePage> {
   late User user;
   // Initialize the index for the news carousel
   int _currentCard = 0;
+
+  late Timer _timer;
 
   // Tells the page what to do when it first opens
   @override
@@ -74,38 +77,48 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(article_headline),
+              Text(article_headline,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              SizedBox(height: 10),
               Wrap(
                 children: <Widget>[
                   Text(article_brief),
                 ],
               ),
+              SizedBox(height: 20),
               ElevatedButton(
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          10.0), // Adjust the value to control the roundness
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      EdgeInsets.all(16.0)),
+                      EdgeInsets.all(14.0)),
                   backgroundColor: MaterialStateProperty.all<Color>(
                       const Color.fromRGBO(121, 134, 203, 1)),
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.white),
                 ),
                 onPressed: () {
                   navigateToNewsPage(newsData);
                 },
-                child: Text("View More"),
+                child: Text(
+                  "View More",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.network(image_url, fit: BoxFit.cover, width: 150.0)
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                child: Image.network(
+                  image_url,
+                  fit: BoxFit.cover,
+                  width: 150.0,
+                ),
+              ),
             ],
           ),
         ],
@@ -141,17 +154,64 @@ class _HomePageState extends State<HomePage> {
 
   void diagnoseFunction() async {
     if (await isDataValid()) {
-      triggerDevice();
+      String reportID = DateTime.now().toString();
+      triggerDevice(reportID);
+      countDownDisplay(context, reportID);
     } else {
       showWarningPopUp(context);
     }
   }
 
-  Future<int> triggerDevice() async {
+  void countDownDisplay(BuildContext context, String reportID) {
+    late StreamController<int> _events = new StreamController<int>();
+
+    int _counter = 15;
+    _events.add(_counter);
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_counter > 0) {
+        _counter--;
+        _events.add(_counter);
+      } else {
+        _timer.cancel();
+        Navigator.of(context).pop();
+
+        // Calculate week id
+        DateTime date = DateTime.parse(reportID);
+        int weekOfYear = date.weekday == DateTime.sunday
+            ? date.difference(DateTime(date.year, 1, 1)).inDays ~/ 7 + 1
+            : date.difference(DateTime(date.year, 1, 1)).inDays ~/ 7;
+        String weekID = "week" + weekOfYear.toString();
+
+        // Navigate to report page
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                ReportPage(weekId: weekID, reportId: reportID)));
+      }
+    });
+
+    CupertinoAlertDialog alert = CupertinoAlertDialog(
+      title: Text("Diagnose Countdown"),
+      content: StreamBuilder<int>(
+          stream: _events.stream,
+          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            return Text(snapshot.data.toString());
+          }),
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  Future<int> triggerDevice(String reportID) async {
     String link =
         'https://api.particle.io/v1/devices/e00fce684219e0e249d5bc42/uploadEKGData?access_token=40c9617030f65832904eb99528de3da5e7ebfe66';
 
-    Map data = {'args': user.uid};
+    String boron_data = user.uid + "," + reportID;
+    Map data = {'args': boron_data};
 
     var body = json.encode(data);
 
@@ -186,38 +246,6 @@ class _HomePageState extends State<HomePage> {
         onPressed: diagnoseFunction,
         child: Text(
           "Diagnose Now",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Widget CheckReport() {
-    return Container(
-      width: 350,
-      height: 60,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  10.0), // Adjust the value to control the roundness
-            ),
-          ),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              EdgeInsets.all(16.0)),
-          backgroundColor: MaterialStateProperty.all<Color>(
-              const Color.fromRGBO(121, 134, 203, 1)),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        ),
-        onPressed: () {
-          setState(() {
-            selectedIndex = 1;
-          });
-        },
-        child: Text(
-          "Check Report",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           textAlign: TextAlign.center,
         ),
@@ -269,9 +297,17 @@ class _HomePageState extends State<HomePage> {
 
     for (int i = 0; i < amtOfCards; i++) {
       if (i == _currentCard) {
-        circles.add(Icon(Icons.circle));
+        circles.add(Icon(
+          size: 15,
+          color: const Color.fromRGBO(57, 73, 171, 1),
+          Icons.circle,
+        ));
       } else {
-        circles.add(Icon(Icons.circle_outlined));
+        circles.add(Icon(
+          size: 15,
+          color: const Color.fromRGBO(57, 73, 171, 1),
+          Icons.circle_outlined,
+        ));
       }
     }
 
@@ -297,8 +333,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget NewsSection(Map newsInfo) {
-    print(newsInfo);
-
     List news = newsInfo.keys.toList();
     List<Widget> newsCards = [];
     for (int i = 0; i < news.length; i++) {
@@ -306,17 +340,17 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
         child: Container(
           height: 300,
           color: const Color.fromRGBO(197, 202, 233, 1),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               NewsCarousel(newsCards),
               NewsIndicator(news.length),
-              SizedBox(height: 20.0),
             ],
           ),
         ),
@@ -341,9 +375,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 50),
             DianoseNow(),
-            SizedBox(height: 20),
-            CheckReport(),
-            SizedBox(height: 90),
+            SizedBox(height: 160),
             FutureNewsSection(),
           ],
         ),

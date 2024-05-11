@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/main.dart';
-import 'package:flutter_application/signuppage.dart';
-import 'package:flutter_application/navigationpage.dart';
+import 'package:Eureka_HeartGuard/main.dart';
+import 'package:Eureka_HeartGuard/signuppage.dart';
+import 'package:Eureka_HeartGuard/navigationpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginInPage extends StatefulWidget {
@@ -19,14 +19,14 @@ class _LoginInPageState extends State<LoginInPage> {
   bool rememberValue = true;
 
   @override
-    void initState() {
-      super.initState();
-      auth.authStateChanges().listen((User? user){
-        if(user != null){
-          navigateToNavigationPage();
-        }
-      });
-    }
+  void initState() {
+    super.initState();
+    auth.authStateChanges().listen((User? user) {
+      if (user != null) {
+        navigateToNavigationPage();
+      }
+    });
+  }
 
   void navigateToSignUpPage() {
     Navigator.of(context)
@@ -51,16 +51,17 @@ class _LoginInPageState extends State<LoginInPage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
-              color: Colors.purple, // Border color
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: Colors.purple, // Border color when focused
+              color: const Color.fromRGBO(
+                  121, 134, 203, 1), // Border color when focused
               width: 4,
             ),
           ),
@@ -81,7 +82,7 @@ class _LoginInPageState extends State<LoginInPage> {
           suffixIcon: IconButton(
             icon: Icon(
               obscureValue ? Icons.visibility_off : Icons.visibility,
-              color: Colors.purple,
+              color: const Color.fromRGBO(121, 134, 203, 1),
             ),
             onPressed: () {
               setState(() {
@@ -94,16 +95,17 @@ class _LoginInPageState extends State<LoginInPage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
-              color: Colors.purple, // Border color
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: Colors.purple, // Border color when focused
+              color: const Color.fromRGBO(
+                  121, 134, 203, 1), // Border color when focused
               width: 4,
             ),
           ),
@@ -128,10 +130,15 @@ class _LoginInPageState extends State<LoginInPage> {
           });
         },
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-              Colors.black), // Background color of the button
+          backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(
+              121, 134, 203, 1)), // Background color of the button
           foregroundColor: MaterialStateProperty.all(
-              Colors.white), // Text color of the buttonof the button
+              Colors.white), // Text color of the button
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
         ),
         child: Text('Log In'),
       ),
@@ -144,24 +151,22 @@ class _LoginInPageState extends State<LoginInPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 40.0),
-          child: Icon(
-            Icons.file_copy,
-            color: Colors.purple,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Text(
+            "Σureka",
+            style: TextStyle(
+                color: const Color.fromRGBO(57, 73, 171, 1),
+                fontWeight: FontWeight.bold,
+                fontSize: 26.0),
           ),
-        ),
-        title: Text(
-          "Σureka",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25.0),
         ),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 50),
+            SizedBox(height: 40),
             Text(
               "Welcome Back!",
               style: TextStyle(
@@ -174,8 +179,8 @@ class _LoginInPageState extends State<LoginInPage> {
               "Please enter your login information",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.purple,
-                fontSize: 30,
+                color: const Color.fromRGBO(121, 134, 203, 1),
+                fontSize: 16,
               ),
             ),
             SizedBox(height: 80),
@@ -203,7 +208,7 @@ class _LoginInPageState extends State<LoginInPage> {
                       Text(
                         "Remember me",
                         style: TextStyle(
-                          color: Colors.purple,
+                          color: const Color.fromRGBO(57, 73, 171, 1),
                           fontSize: 15,
                         ),
                       ),
@@ -212,7 +217,7 @@ class _LoginInPageState extends State<LoginInPage> {
                   Text(
                     "Forgot Password?",
                     style: TextStyle(
-                      color: Colors.purple,
+                      color: const Color.fromRGBO(57, 73, 171, 1),
                       fontSize: 15,
                     ),
                   ),
@@ -225,7 +230,7 @@ class _LoginInPageState extends State<LoginInPage> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               Text(
                 "Don't have an account?",
-                style: TextStyle(color: Colors.purple),
+                style: TextStyle(color: const Color.fromRGBO(57, 73, 171, 1)),
               ),
               TextButton(
                   onPressed: navigateToSignUpPage,
@@ -234,7 +239,7 @@ class _LoginInPageState extends State<LoginInPage> {
                     style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontWeight: FontWeight.bold,
-                        color: Colors.purple),
+                        color: const Color.fromRGBO(57, 73, 171, 1)),
                   )),
             ]),
           ],

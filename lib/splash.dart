@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/loginpage.dart';
+import 'package:Eureka_HeartGuard/loginpage.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -15,7 +15,7 @@ class _SplashState extends State<Splash> {
     super.initState();
 
     // Delay
-    Timer(Duration(milliseconds: 108500), navigateToHomePage);
+    Timer(Duration(milliseconds: 3000), navigateToHomePage);
   }
 
   void navigateToHomePage() {
@@ -34,15 +34,13 @@ class _SplashState extends State<Splash> {
               child: Align(
                 alignment: Alignment.center,
                 widthFactor: 0.8,
-                child: Image.network(
-                  'https://drive.google.com/uc?export=view&id=1MmyY2puR3V0ghNH_5p4dHoEMOwGAMqj6',
-                ),
+                child: Image.asset("assets/icon.png"),
               ),
             ),
             Text(
               "Σureka",
               style: TextStyle(
-                color: Colors.black,
+                color: const Color.fromRGBO(121, 134, 203, 1),
                 fontWeight: FontWeight.bold,
                 fontSize: 30.0,
               ),

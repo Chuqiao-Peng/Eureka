@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/homepage.dart';
-import 'package:flutter_application/weeklyreportpage.dart';
-import 'package:flutter_application/aichatpage.dart';
-import 'package:flutter_application/settingspage.dart';
-import 'package:flutter_application/my_flutter_app_icons.dart';
-
-int selectedIndex = 0;
+import 'package:Eureka_HeartGuard/homepage.dart';
+import 'package:Eureka_HeartGuard/weeklyreportpage.dart';
+import 'package:Eureka_HeartGuard/aichatpage.dart';
+import 'package:Eureka_HeartGuard/settingspage.dart';
+import 'package:Eureka_HeartGuard/my_flutter_app_icons.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -15,6 +13,8 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
+  int selectedIndex = 0;
+
   static final List<Widget> pages = <Widget>[
     const HomePage(),
     const WeeklyReportPage(),
@@ -28,10 +28,55 @@ class _NavigationPageState extends State<NavigationPage> {
     });
   }
 
+  Widget CheckReport() {
+    return Container(
+      width: 350,
+      height: 60,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                  10.0), // Adjust the value to control the roundness
+            ),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.all(16.0)),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              const Color.fromRGBO(121, 134, 203, 1)),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        ),
+        onPressed: () {
+          selectPage(1);
+        },
+        child: Text(
+          "Check Report",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[selectedIndex],
+      body: selectedIndex != 0
+          ? pages[selectedIndex]
+          : Stack(
+              children: <Widget>[
+                pages[0],
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 300),
+                      CheckReport(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -43,7 +88,7 @@ class _NavigationPageState extends State<NavigationPage> {
             label: "Reports",
           ),
           BottomNavigationBarItem(
-            icon: Icon(MyFlutterApp.robot),
+            icon: Icon(Icons.chat_bubble),
             label: "AI Chat",
           ),
           BottomNavigationBarItem(

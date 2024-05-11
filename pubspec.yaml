@@ -1,4 +1,4 @@
-name: flutter_application
+name: Eureka_HeartGuard
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -61,11 +61,11 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/images/https://drive.google.com/uc?export=view&id=1MmyY2puR3V0ghNH_5p4dHoEMOwGAMqj6
-  fonts:
-    - family:  MyFlutterApp
-      fonts:
-        - asset: fonts/MyFlutterApp.ttf
+    - assets/
+  # fonts:
+  #   - family: MyFlutterApp
+  #     fonts:
+  #       - asset: fonts/MyFlutterApp.ttf
         
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

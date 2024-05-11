@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/loginpage.dart';
+import 'package:Eureka_HeartGuard/loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_application/navigationpage.dart';
+import 'package:Eureka_HeartGuard/navigationpage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -43,16 +43,16 @@ class _SignUpPageState extends State<SignUpPage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
-              color: Colors.purple, // Border color
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: Colors.purple, // Border color when focused
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color when focused
               width: 4,
             ),
           ),
@@ -74,16 +74,16 @@ class _SignUpPageState extends State<SignUpPage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
-              color: Colors.purple, // Border color
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: Colors.purple, // Border color when focused
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color when focused
               width: 4,
             ),
           ),
@@ -104,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
           suffixIcon: IconButton(
             icon: Icon(
               obscureValue1 ? Icons.visibility_off : Icons.visibility,
-              color: Colors.purple,
+              color: const Color.fromRGBO(121, 134, 203, 1),
             ),
             onPressed: () {
               setState(() {
@@ -117,16 +117,16 @@ class _SignUpPageState extends State<SignUpPage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
-              color: Colors.purple, // Border color
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: Colors.purple, // Border color when focused
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color when focused
               width: 4,
             ),
           ),
@@ -147,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
           suffixIcon: IconButton(
             icon: Icon(
               obscureValue2 ? Icons.visibility_off : Icons.visibility,
-              color: Colors.purple,
+              color: const Color.fromRGBO(121, 134, 203, 1),
             ),
             onPressed: () {
               setState(() {
@@ -160,16 +160,16 @@ class _SignUpPageState extends State<SignUpPage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
-              color: Colors.purple, // Border color
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: Colors.purple, // Border color when focused
+              color: const Color.fromRGBO(121, 134, 203, 1), // Border color when focused
               width: 4,
             ),
           ),
@@ -234,17 +234,22 @@ class _SignUpPageState extends State<SignUpPage> {
     navigateToNavigationPage();
   }
 
-  Widget SignUpButton() {
+    Widget SignUpButton() {
     return Container(
       height: 35.0,
       width: 350.0,
       child: ElevatedButton(
         onPressed: SignUp,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-              Colors.black), // Background color of the button
+          backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(
+              121, 134, 203, 1)), // Background color of the button
           foregroundColor: MaterialStateProperty.all(
-              Colors.white), // Text color of the buttonof the button
+              Colors.white), // Text color of the button
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
         ),
         child: Text('Sign Up'),
       ),
@@ -270,7 +275,7 @@ class _SignUpPageState extends State<SignUpPage> {
     ];
 
     String selectedDay = date.day.toString(); // Default today's date
-    String selectedMonth = months[date.month-1];
+    String selectedMonth = months[date.month - 1];
     String selectedYear = date.year.toString();
 
     List<DropdownMenuItem<String>> dayItems =
@@ -353,26 +358,24 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 40.0),
-          child: Icon(
-            Icons.file_copy,
-            color: Colors.purple,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Text(
+            "Σureka",
+            style: TextStyle(
+                color: const Color.fromRGBO(57, 73, 171, 1),
+                fontWeight: FontWeight.bold,
+                fontSize: 26.0),
           ),
-        ),
-        title: Text(
-          "Σureka",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25.0),
         ),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 40),
               Text(
                 "Hi! Welcome",
                 style: TextStyle(
@@ -384,21 +387,24 @@ class _SignUpPageState extends State<SignUpPage> {
               Text(
                 "Please register below",
                 style: TextStyle(
-                  color: Colors.purple,
-                  fontSize: 30,
+                  color: const Color.fromRGBO(121, 134, 203, 1),
+                  fontSize: 16,
                 ),
               ),
-              SizedBox(height: 50),
+              SizedBox(height: 80),
               NameTextField("Full Name"),
               SizedBox(height: 20),
               EmailTextField("Email or Phone Number"),
               SizedBox(height: 20),
               CustomPasswordField1("Password"),
-              Text(
-                "Password must be at least 6 characters and contain numbers and letters",
-                style: TextStyle(
-                  color: Colors.purple,
-                  fontSize: 10,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Text(
+                  "Password must be at least 6 characters and contain numbers and letters",
+                  style: TextStyle(
+                    color: const Color.fromRGBO(57, 73, 171, 1),
+                    fontSize: 10,
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -413,24 +419,29 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: <Widget>[
                     Text(
                       "Have an account?",
-                      style: TextStyle(color: Colors.purple),
+                      style: TextStyle(
+                          color: const Color.fromRGBO(57, 73, 171, 1)),
                     ),
                     TextButton(
-                        onPressed: () {Navigator.pop(context); },
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         child: Text(
                           "Log In",
                           style: TextStyle(
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.bold,
-                              color: Colors.purple),
+                              color: const Color.fromRGBO(57, 73, 171, 1)),
                         )),
                   ]),
-              SizedBox(height: 150),
-              Text("We need permission for the service you use. Learn more."),
+              SizedBox(height: 80),
+              Text(
+                "We need permission for the service you use. Learn more.",
+                style: TextStyle(fontSize: 12),
+              ),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

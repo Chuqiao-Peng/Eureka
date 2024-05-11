@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/aboutmepage.dart';
+import 'package:Eureka_HeartGuard/aboutmepage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/splash.dart';
+import 'package:Eureka_HeartGuard/splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,10 +9,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Eureka HeartGuard',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.comfortaaTextTheme(Theme.of(context).textTheme),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(121, 134, 203, 1),),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(121, 134, 203, 1),
+        ),
         useMaterial3: true,
       ),
       home: const Splash(),

@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/main.dart';
+import 'package:Eureka_HeartGuard/main.dart';
 
 class ReportPage extends StatefulWidget {
   final String weekId;
@@ -73,13 +72,13 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget BackButton(BuildContext context) {
-  return IconButton(
-    icon: Icon(Icons.arrow_back, color: Color.fromRGBO(57, 73, 171, 1)),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-}
+    return IconButton(
+      icon: Icon(Icons.arrow_back, color: Color.fromRGBO(57, 73, 171, 1)),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
 
   Widget FutureTopWindow() {
     return FutureBuilder(
@@ -98,7 +97,7 @@ class _ReportPageState extends State<ReportPage> {
   Widget TopWindow(List avg_heartbeat) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -111,6 +110,7 @@ class _ReportPageState extends State<ReportPage> {
                   LineChartData(
                     lineBarsData: [
                       LineChartBarData(
+                        isCurved: true,
                         spots: createPoints(avg_heartbeat),
                       ),
                     ],
@@ -135,22 +135,30 @@ class _ReportPageState extends State<ReportPage> {
   Widget DisplayWarning(String prediction) {
     if (prediction == "Placebo") {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("No Warnings"),
+            Text("No Warnings",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromRGBO(57, 73, 171, 1),
+                    fontSize: 16)),
           ],
         ),
       );
     } else {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-                "Warning! Detected ECG irregularies suggest potential substance consumption beyond safe levels."),
+                "Warning! Detected ECG irregularies suggest potential substance consumption beyond safe levels.",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromRGBO(194, 24, 91, 1),
+                    fontSize: 16)),
           ],
         ),
       );
@@ -187,12 +195,12 @@ class _ReportPageState extends State<ReportPage> {
   Widget BottomWindow(Map report) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(7.0),
+              borderRadius: BorderRadius.circular(10.0),
               child: Container(
                 height: 200,
                 width: double.infinity,
@@ -200,10 +208,13 @@ class _ReportPageState extends State<ReportPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("Your Average P Wave: " +
-                        (25*report["avg_p_wave"]).toString() + " milliseconds"),
-                    Text("Your Average Corrected QT Interval: " +
-                        (25*report["avg_qt_interval"]).toString()+ " milliseconds"),
-                    Text("Demographic paragraph")
+                        (25 * report["avg_p_wave"]).toString() +
+                        " milliseconds"),
+                    Text("Your Average Corrected QTc Interval: " +
+                        (25 * report["avg_qtc_interval"]).toString() +
+                        " milliseconds"),
+                    SizedBox(height: 20),
+                    // Text("Demographic paragraph")
                   ],
                 ),
               ),
@@ -223,13 +234,13 @@ class _ReportPageState extends State<ReportPage> {
           children: <Widget>[
             SizedBox(height: 70),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[BackButton(context)],
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 20),
             FutureTopWindow(),
             SizedBox(height: 20),
             FutureWarning(),

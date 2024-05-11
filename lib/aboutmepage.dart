@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_application/loginpage.dart';
-import 'package:flutter_application/main.dart';
+import 'package:Eureka_HeartGuard/loginpage.dart';
+import 'package:Eureka_HeartGuard/main.dart';
 
 const List<String> ethnic = <String>[
   'OTHER',
@@ -103,7 +103,7 @@ class _AboutMePageState extends State<AboutMePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0),
+          padding: EdgeInsets.symmetric(horizontal: 40.0),
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class _AboutMePageState extends State<AboutMePage> {
 
   Widget RowFields(Map user_info, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Container(
         height: 50.0,
         child: Row(
@@ -155,7 +155,7 @@ class _AboutMePageState extends State<AboutMePage> {
                 style: TextStyle(fontSize: 16),
               ),
             ),
-            SizedBox(width: 50),
+            SizedBox(width: 100),
             !_editMode ? displayInfo(user_info, value) : editInfo(value),
           ],
         ),
@@ -205,7 +205,7 @@ class _AboutMePageState extends State<AboutMePage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
               color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
@@ -237,7 +237,7 @@ class _AboutMePageState extends State<AboutMePage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
               color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
@@ -269,7 +269,7 @@ class _AboutMePageState extends State<AboutMePage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
               color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
@@ -301,7 +301,7 @@ class _AboutMePageState extends State<AboutMePage> {
           fillColor: Colors.white, // Background color of the text field
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-                50.0), // Adjust the value to control the roundness
+                10.0), // Adjust the value to control the roundness
             borderSide: BorderSide(
               color: const Color.fromRGBO(121, 134, 203, 1), // Border color
               width: 4,
@@ -332,13 +332,28 @@ class _AboutMePageState extends State<AboutMePage> {
       },
       dropdownMenuEntries:
           ethnic.map<DropdownMenuEntry<String>>((String value) {
-        return DropdownMenuEntry<String>(value: value, label: value);
+        return DropdownMenuEntry<String>(
+            value: value, label: value, style: ButtonStyle());
       }).toList(),
     );
   }
 
   Widget SubmitButton() {
-    return ElevatedButton(onPressed: SubmitData, child: Text('Submit'));
+    return ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.all(14.0))
+        ),
+        onPressed: SubmitData,
+        child: Text(
+          "Submit",
+          style: TextStyle(color: Color.fromRGBO(57, 73, 171, 1)),
+        ));
   }
 
   void SubmitData() async {
@@ -370,9 +385,19 @@ class _AboutMePageState extends State<AboutMePage> {
 
   Widget LogOutButton() {
     return ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.all(14.0))
+        ),
         onPressed: signOut,
         child: Text(
           "Sign Out",
+          style: TextStyle(color: Color.fromRGBO(57, 73, 171, 1)),
         ));
   }
 
@@ -387,10 +412,13 @@ class _AboutMePageState extends State<AboutMePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(context),
+        leading: Padding(
+          padding: EdgeInsets.only(left: 25),
+          child: BackButton(context),
+        ),
         actions: <Widget>[
           Padding(
-            padding: EdgeInsets.only(right: 30),
+            padding: EdgeInsets.only(right: 25),
             child: EditButton(context),
           ),
         ],
@@ -399,7 +427,7 @@ class _AboutMePageState extends State<AboutMePage> {
         child: ListView(
           children: <Widget>[
             FutureFields(),
-            SizedBox(height: 40),
+            SizedBox(height: 30),
             Center(
               child: SizedBox(
                 width: 200, // Constrain the width of the button

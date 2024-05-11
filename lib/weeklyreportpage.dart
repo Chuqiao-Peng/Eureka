@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/main.dart';
-import 'package:flutter_application/reportlistpage.dart';
+import 'package:Eureka_HeartGuard/main.dart';
+import 'package:Eureka_HeartGuard/reportlistpage.dart';
 
 class WeeklyReportPage extends StatefulWidget {
   const WeeklyReportPage({super.key});
@@ -95,36 +95,65 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
           if (snapshot.hasData) {
             // render the report list on screen
             List reportList = snapshot.data as List;
-            QueryDocumentSnapshot doc = reportList[0];
-            Map data = doc.data() as Map;
-            int warnings = data["warnings"];
-            String weekId = reportList[0].id;
 
-            return TopWindow(weekId, warnings);
+            if (reportList.length == 0) {
+              return Text("No reports available yet.");
+            } else {
+              QueryDocumentSnapshot doc = reportList[0];
+              Map data = doc.data() as Map;
+              int warnings = data["warnings"];
+              String weekId = reportList[0].id;
+
+              return TopWindow(weekId, warnings);
+            }
           } else {
             return Text("An error occurred. Could not get warnings");
           }
         });
   }
 
+  Widget ViewMoreButton(String weekId) {
+    return ElevatedButton(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                EdgeInsets.all(14.0))),
+        onPressed: () {
+          navigateToReportListPage(weekId);
+        },
+        child: Text(
+          "View More",
+          style: TextStyle(color: Color.fromRGBO(57, 73, 171, 1)),
+        ));
+  }
+
   Widget TopWindow(String weekId, int warnings) {
+    String capitalizedWeekId =
+        weekId.replaceRange(0, 1, weekId[0].toUpperCase());
+    int kIndex = capitalizedWeekId.indexOf('k');
+    String formattedWeekId =
+        capitalizedWeekId.replaceRange(kIndex + 1, kIndex + 1, ' ');
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Most Recent Report: " + weekId,
+                Text("Most Recent Report: " + formattedWeekId,
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],
             ),
             SizedBox(height: 10),
             ClipRRect(
-              borderRadius: BorderRadius.circular(7.0),
+              borderRadius: BorderRadius.circular(10.0),
               child: Container(
                 height: 200,
                 color: const Color.fromRGBO(121, 134, 203, 1),
@@ -147,25 +176,15 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
                           children: <Widget>[
                             Text(
                               "warnings",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             )
                           ],
                         ),
-                        Row(
-                          children: <Widget>[
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white),
-                              ),
-                              onPressed: () {
-                                navigateToReportListPage(weekId);
-                              },
-                              child: Text("View more", style: TextStyle(color: const Color.fromRGBO(57, 73, 171, 1))),
-                            ),
-                          ],
-                        ),
+                        SizedBox(height: 10),
+                        ViewMoreButton(weekId),
                       ],
                     ),
                     Column(
@@ -205,7 +224,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
   Widget ReportList(List reportList) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -218,7 +237,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
               ],
             ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(7.0),
+              borderRadius: BorderRadius.circular(10.0),
               child: Container(
                 height: 200,
                 child: ListView(
@@ -241,6 +260,11 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
   }
 
   Widget ReportRow(String reportName) {
+    String capitalizedWeekId =
+        reportName.replaceRange(0, 1, reportName[0].toUpperCase());
+    int kIndex = capitalizedWeekId.indexOf('k');
+    String formattedWeekId =
+        capitalizedWeekId.replaceRange(kIndex + 1, kIndex + 1, ' ');
     return GestureDetector(
       onTap: () {
         // Navigate to the ReportListPage upon tapping a report row
@@ -259,10 +283,10 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Text(reportName),
+                child: Text(formattedWeekId),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 260, right: 4.0),
+                padding: const EdgeInsets.only(left: 230.0, right: 4.0),
                 child: Icon(
                   Icons.arrow_forward_ios,
                   size: 15,
@@ -288,7 +312,9 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
         title: Text(
           "Personal Reports",
           style: TextStyle(
-              color: const Color.fromRGBO(57, 73, 171, 1), fontWeight: FontWeight.bold, fontSize: 24.0),
+              color: const Color.fromRGBO(57, 73, 171, 1),
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0),
         ),
       ),
       body: Center(
