@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Eureka_HeartGuard/loginpage.dart';
@@ -178,7 +179,7 @@ class _AboutMePageState extends State<AboutMePage> {
       return AgeTextField("Age");
     }
     if (value == 'height') {
-      return HeightTextField("Height (m)");
+      return HeightTextField("Height (cm)");
     }
     if (value == 'weight') {
       return WeightTextField("Weight (kg)");
@@ -341,14 +342,13 @@ class _AboutMePageState extends State<AboutMePage> {
   Widget SubmitButton() {
     return ElevatedButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
             ),
-          ),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              EdgeInsets.all(14.0))
-        ),
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                EdgeInsets.all(14.0))),
         onPressed: SubmitData,
         child: Text(
           "Submit",
@@ -386,14 +386,13 @@ class _AboutMePageState extends State<AboutMePage> {
   Widget LogOutButton() {
     return ElevatedButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
             ),
-          ),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              EdgeInsets.all(14.0))
-        ),
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                EdgeInsets.all(14.0))),
         onPressed: signOut,
         child: Text(
           "Sign Out",
@@ -406,6 +405,59 @@ class _AboutMePageState extends State<AboutMePage> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginInPage()),
         (route) => false);
+  }
+
+  Widget DeleteAccountBtn() {
+    return ElevatedButton(
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.all(14.0))),
+      onPressed: () {
+        deleteAlert(context);
+      },
+      child: Text(
+        "Delete Account",
+        style: TextStyle(color: Color.fromRGBO(57, 73, 171, 1)),
+      ),
+    );
+  }
+
+  void deleteAccount() async {
+    await user.delete(); // delete user from authentication
+// delete user info from firestore database?
+  }
+
+  void deleteAlert(BuildContext context) {
+    CupertinoAlertDialog alert = CupertinoAlertDialog(
+      title: Text("Account Deletion"),
+      content: Text("Are you sure about deleting your profile?"),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Back'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('Delete'),
+          onPressed: () {
+            deleteAccount();
+            signOut();
+          },
+        ),
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 
   @override
@@ -439,6 +491,13 @@ class _AboutMePageState extends State<AboutMePage> {
               child: SizedBox(
                 width: 200, // Constrain the width of the button
                 child: LogOutButton(),
+              ),
+            ),
+            SizedBox(height: 10), // Spacing between buttons
+            Center(
+              child: SizedBox(
+                width: 200, // Constrain the width of the button
+                child: DeleteAccountBtn(),
               ),
             ),
           ],

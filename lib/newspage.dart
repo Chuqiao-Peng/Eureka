@@ -9,7 +9,7 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  Widget NewsTitle() {
+  Widget BannerImage() {
     return Container(
       height: 120,
       width: double.infinity,
@@ -32,22 +32,6 @@ class _NewsPageState extends State<NewsPage> {
               BackButton(),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 20.0, bottom: 10.0),
-                child: Text(
-                  widget.newsData["article_title"],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -63,6 +47,24 @@ class _NewsPageState extends State<NewsPage> {
         shape: MaterialStateProperty.all(CircleBorder()),
         backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      ),
+    );
+  }
+
+  Widget NewsTitle() {
+    return Container(
+      padding: EdgeInsets.only(top: 10),
+      child: Wrap(
+        children: [
+          Text(
+            widget.newsData["article_title"],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 35.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -96,7 +98,16 @@ class _NewsPageState extends State<NewsPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 90.0),
-            NewsTitle(),
+            BannerImage(),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  NewsTitle(),
+                ],
+              ),
+            ),
             NewsContent(),
           ],
         ),

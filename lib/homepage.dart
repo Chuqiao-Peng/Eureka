@@ -66,6 +66,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget CarouselCards(Map<String, dynamic> newsData) {
     String article_headline = newsData["article_title"];
+    if (newsData["article_title"].length >= 20) {
+      article_headline = newsData["article_title"].substring(0, 20) + "...";
+    }
     String article_brief = newsData["article_content"].substring(0, 20) + "...";
     String image_url = newsData["image"];
 
@@ -116,7 +119,8 @@ class _HomePageState extends State<HomePage> {
                 child: Image.network(
                   image_url,
                   fit: BoxFit.cover,
-                  width: 150.0,
+                  height: 120.0,
+                  width: 120.0,
                 ),
               ),
             ],
@@ -243,7 +247,13 @@ class _HomePageState extends State<HomePage> {
               const Color.fromRGBO(121, 134, 203, 1)),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
-        onPressed: diagnoseFunction,
+        onPressed: () {
+          if (user.email == "eureka@gmail.com") {
+            eurekaAlert(context);
+          } else {
+            diagnoseFunction();
+          }
+        },
         child: Text(
           "Diagnose Now",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -251,6 +261,29 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void eurekaAlert(BuildContext context) {
+    Widget exitButton = TextButton(
+      child: Text("Back"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    CupertinoAlertDialog alert = CupertinoAlertDialog(
+      title: Text("Device not connected"),
+      content: Text("Make sure that the ecg sensor is connected to the app."),
+      actions: <Widget>[
+        exitButton,
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 
   void showWarningPopUp(BuildContext context) {
