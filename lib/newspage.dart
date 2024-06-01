@@ -24,7 +24,7 @@ class _NewsPageState extends State<NewsPage> {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -51,24 +51,6 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  Widget NewsTitle() {
-    return Container(
-      padding: EdgeInsets.only(top: 10),
-      child: Wrap(
-        children: [
-          Text(
-            widget.newsData["article_title"],
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget NewsContent() {
     return Expanded(
       child: Container(
@@ -76,6 +58,15 @@ class _NewsPageState extends State<NewsPage> {
         child: ListView(
           padding: EdgeInsets.only(top: 10),
           children: <Widget>[
+            Text(
+              widget.newsData["article_title"],
+              overflow: TextOverflow.visible,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 35.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             Text(
               widget.newsData["article_content"],
               textAlign: TextAlign.left,
@@ -99,15 +90,6 @@ class _NewsPageState extends State<NewsPage> {
           children: <Widget>[
             SizedBox(height: 90.0),
             BannerImage(),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  NewsTitle(),
-                ],
-              ),
-            ),
             NewsContent(),
           ],
         ),
