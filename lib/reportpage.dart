@@ -207,6 +207,9 @@ class _ReportPageState extends State<ReportPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Text("Your Heart Rate: " +
+                        (report["heart_rate"]).toString() +
+                        " milliseconds"),
                     Text("Your Average P Wave: " +
                         (25 * report["avg_p_wave"]).toString() +
                         " milliseconds"),
