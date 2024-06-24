@@ -249,7 +249,7 @@ class _HomePageState extends State<HomePage> {
         ),
         onPressed: () {
           if (user.email == "eureka@gmail.com") {
-            eurekaAlert(context);
+            diagnoseSampleFunction();
           } else {
             diagnoseFunction();
           }
@@ -263,27 +263,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void eurekaAlert(BuildContext context) {
-    Widget exitButton = TextButton(
-      child: Text("Back"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
+  void diagnoseSampleFunction() async {
+    if (await isDataValid()) {
+      String reportID = DateTime.now().toString();
 
-    CupertinoAlertDialog alert = CupertinoAlertDialog(
-      title: Text("Device not connected"),
-      content: Text("Make sure that the ecg sensor is connected to the app."),
-      actions: <Widget>[
-        exitButton,
-      ],
-    );
+      String link = "http://18.223.255.251:5000/sample_data_classify";
+      Map data = {'reportID': reportID};
+      var body = json.encode(data);
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
+      await http.post(Uri.parse(link), headers: {"Content-Type": "application/json"}, body: body);
+
+      countDownDisplay(context, reportID);
+    } else {
+      showWarningPopUp(context);
+    }
   }
 
   void showWarningPopUp(BuildContext context) {
