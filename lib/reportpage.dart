@@ -208,13 +208,13 @@ class _ReportPageState extends State<ReportPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("Your Heart Rate: " +
-                        (report["heart_rate"]).toString() +
+                        (report["heart_rate"]).toStringAsFixed(2) +
                         " milliseconds"),
                     Text("Your Average P Wave: " +
-                        (25 * report["avg_p_wave"]).toString() +
+                        (25 * report["avg_p_wave"]).toStringAsFixed(2) +
                         " milliseconds"),
                     Text("Your Average Corrected QT Interval: " +
-                        (25 * report["avg_qtc_interval"]).toString() +
+                        (25 * report["avg_qtc_interval"]).toStringAsFixed(2) +
                         " milliseconds"),
                     SizedBox(height: 20),
                     // Text("Demographic paragraph")

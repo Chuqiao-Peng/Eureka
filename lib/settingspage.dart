@@ -12,7 +12,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    print("Entered SettingsPage");
   }
 
   void navigateToProfilePage() {

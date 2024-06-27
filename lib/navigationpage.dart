@@ -18,7 +18,7 @@ class _NavigationPageState extends State<NavigationPage> {
   static final List<Widget> pages = <Widget>[
     const HomePage(),
     const WeeklyReportPage(),
-    const AIChatPage(),
+    // const AIChatPage(),
     const SettingsPage(),
   ];
 
@@ -87,10 +87,10 @@ class _NavigationPageState extends State<NavigationPage> {
             icon: Icon(Icons.file_copy),
             label: "Reports",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: "AI Chat",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.chat_bubble),
+          //   label: "AI Chat",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: "Settings",
