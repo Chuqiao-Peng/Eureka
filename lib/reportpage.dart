@@ -209,7 +209,7 @@ class _ReportPageState extends State<ReportPage> {
                   children: <Widget>[
                     Text("Your Heart Rate: " +
                         (report["heart_rate"]).toStringAsFixed(2) +
-                        " milliseconds"),
+                        " beats per minute"),
                     Text("Your Average P Wave: " +
                         (25 * report["avg_p_wave"]).toStringAsFixed(2) +
                         " milliseconds"),
