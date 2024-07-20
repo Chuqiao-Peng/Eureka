@@ -1,3 +1,4 @@
+import 'package:Eureka_HeartGuard/abouteureka.dart';
 import 'package:flutter/material.dart';
 import 'package:Eureka_HeartGuard/aboutmepage.dart';
 
@@ -19,11 +20,19 @@ class _SettingsPageState extends State<SettingsPage> {
         .push(MaterialPageRoute(builder: (context) => AboutMePage()));
   }
 
+  void navigateToAboutEurekaPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AboutEureka()));
+  }
+
   Widget SettingsRow(String pageName, Icon icon) {
     return GestureDetector(
       onTap: () {
         if (pageName == "About Me") {
           navigateToProfilePage();
+        }
+        if (pageName == "About Σureka") {
+          navigateToAboutEurekaPage();
         }
       },
       child: Container(
