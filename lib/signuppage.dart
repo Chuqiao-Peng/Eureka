@@ -178,6 +178,42 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  Widget WarningWindow()
+  {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(7.0),
+              child: Container(
+                height: 80,
+                color: Color.fromARGB(255, 239, 239, 114),
+                child:
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(Icons.warning),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Warning: This app is for informational purposes only; please consult your doctor before making any medical decisions.",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ), 
+                  ],
+                )
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void SignUp() async {
     // Create a user account for firebase authentication
     String name_text = _nameController.text;
@@ -434,11 +470,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               color: const Color.fromRGBO(57, 73, 171, 1)),
                         )),
                   ]),
-              SizedBox(height: 80),
-              Text(
-                "We need permission for the service you use. Learn more.",
-                style: TextStyle(fontSize: 12),
-              ),
+              SizedBox(height: 30),
+              WarningWindow(),
             ],
           ),
         ),

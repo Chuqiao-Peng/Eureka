@@ -228,6 +228,42 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 
+  Widget WarningWindow()
+  {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(7.0),
+              child: Container(
+                height: 80,
+                color: Color.fromARGB(255, 239, 239, 114),
+                child:
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(Icons.warning),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Warning: The information above is for informational purposes only; please consult your doctor before making any medical decisions.",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ), 
+                  ],
+                )
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -249,6 +285,8 @@ class _ReportPageState extends State<ReportPage> {
             FutureWarning(),
             SizedBox(height: 20),
             FutureBottomWindow(),
+            SizedBox(height: 150),
+            WarningWindow()
           ],
         ),
       ),
