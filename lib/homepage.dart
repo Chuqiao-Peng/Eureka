@@ -600,13 +600,16 @@ class _HomePageState extends State<HomePage> {
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         child: Container(
-          height: 300,
+          // height: 300,
           color: const Color.fromRGBO(197, 202, 233, 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               NewsCarousel(newsCards),
-              NewsIndicator(news.length),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: NewsIndicator(news.length),
+              ),
             ],
           ),
         ),

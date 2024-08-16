@@ -36,9 +36,9 @@ class _SettingsPageState extends State<SettingsPage> {
         }
       },
       child: Container(
-        width: 350,
-        height: 70,
-        // decoration: BoxDecoration(
+        // width: 350,
+        // height: 70,
+        // // decoration: BoxDecoration(
         // border: Border(
         //   bottom: BorderSide(
         //     color: const Color.fromRGBO(121, 134, 203, 1),
@@ -96,15 +96,21 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 30),
-            SettingsRow("About Me", Icon(Icons.person)),
-            SettingsRow("Messages", Icon(Icons.chat_bubble)),
-            SettingsRow("Account and Privacy", Icon(Icons.lock)),
-            SettingsRow("About Σureka", Icon(Icons.report)),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 30),
+              SettingsRow("About Me", Icon(Icons.person)),
+              SizedBox(height: 25),
+              SettingsRow("Messages", Icon(Icons.chat_bubble)),
+              SizedBox(height: 25),
+              SettingsRow("Account and Privacy", Icon(Icons.lock)),
+              SizedBox(height: 25),
+              SettingsRow("About Σureka", Icon(Icons.report)),
+            ],
+          ),
         ),
       ),
     );

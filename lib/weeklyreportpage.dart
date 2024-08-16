@@ -236,6 +236,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],
             ),
+            SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Container(
@@ -271,29 +272,42 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
         navigateToReportListPage(reportName);
       },
       child: Container(
-          height: 35,
+          // height: 35,
           margin: const EdgeInsets.only(bottom: 5.0),
           color: const Color.fromRGBO(159, 168, 218, 1),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Icon(Icons.folder),
+          child: ListTile(
+            dense: true,
+            leading: Icon(Icons.folder),
+            trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 15,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text(formattedWeekId),
+              title: 
+              Text(formattedWeekId,
+              style: TextStyle(fontSize: 14)
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 230.0, right: 4.0),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 15,
-                ),
-              ),
-            ],
-          )),
+          )
+          
+          
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: <Widget>[
+          //     Padding(
+          //       padding: const EdgeInsets.only(left: 4.0),
+          //       child: Icon(Icons.folder),
+          //     ),
+          //     Padding(
+          //       padding: const EdgeInsets.only(left: 10.0),
+          //       child: Text(formattedWeekId),
+          //     ),
+          //     Icon(
+          //       Icons.arrow_forward_ios,
+          //       size: 15,
+          //     ),
+          //   ],
+          // )
+          
+          ),
     );
   }
 

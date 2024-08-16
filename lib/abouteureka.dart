@@ -48,7 +48,7 @@ class _AboutEurekaState extends State<AboutEureka> {
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: Text(
-                "Eureka HeartGuard teaches users about ways to manage their heart health and shows a breakdown of electrocardiogram signals that can be used to inform the user when there might be irregularities in their heartbeats. The app educates users about heart health and overall well-being. Users can access past electrocardiogram signals and stay informed about electrocardiography and relevant heart health news.",
+                "Eureka HeartGuard teaches users about ways to manage their heart health and shows a breakdown of electrocardiogram signals that can be used to inform the user when there might be an overdose of substances. The app educates users about heart health and overall well-being. Users can access past electrocardiogram signals and stay informed about electrocardiography and relevant heart health news.",
               style: TextStyle(
                   fontSize: 16),
               ),
