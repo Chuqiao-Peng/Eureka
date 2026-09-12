@@ -2,8 +2,6 @@
 
 Σureka aims to revolutionize public health by developing innovative smartwatch technology capable of predicting drug or alcohol overdoses, utilizing Electrocardiographic Biometric Technology and Artificial Intelligence.
 
-Visit our website at [eurekau.org](https://eurekau.org) for more information.
-
 ## About Σureka
 
 Σureka is a groundbreaking project focused on enhancing public health through the development of advanced smartwatch technology. Our goal is to provide individuals with early warnings for potential drug or alcohol overdoses, ultimately saving lives and improving healthcare outcomes.
